@@ -4,45 +4,49 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        try {
-            while (true) {
-                String input = scanner.nextLine();
-                String[] parts = input.split(" ");
-
-                if (parts.length != 3) {
-                    throw new Exception("т.к. формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
-                }
-
-                String a = parts[0];
-                String b = parts[1];
-                String c = parts[2];
-
-                if (isRoman(a) != isRoman(c)) {
-                    throw new Exception("т.к. используются одновременно разные системы счисления");
-                }
-
-                boolean isRoman = isRoman(a);
-
-                int a1 = toInt(a);
-                int c1 = toInt(c);
-
-                if (a1 > 10 || c1 > 10 || a1 < 1 || c1 < 1) {
-                    throw new Exception("цифры только от 1 до 10");
-                }
-
-                int result = calculate(a1, b, c1);
-
-                if (isRoman) {
-                    if (result <= 0) {
-                        throw new Exception("т.к. в римской системе нет отрицательных чисел");
-                    }
-                    System.out.println(toRoman(result));
-                } else {
-                    System.out.println(result);
-                }
+        while (true) {
+            String input = scanner.nextLine();
+            try {
+                System.out.println(calc(input));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        }
+    }
+
+    public static String calc(String input) throws Exception {
+        String[] parts = input.split(" ");
+
+        if (parts.length != 3) {
+            throw new Exception("т.к. формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
+        }
+
+        String a = parts[0];
+        String b = parts[1];
+        String c = parts[2];
+
+        if (rim(a) != rim(c)) {
+            throw new Exception("т.к. используются одновременно разные системы счисления");
+        }
+
+        boolean rim = rim(a);
+
+        int a1 = toInt(a);
+        int c1 = toInt(c);
+
+        if (a1 > 10 || c1 > 10 || a1 < 1 || c1 < 1) {
+            throw new Exception("цифры только от 1 до 10");
+        }
+
+        int s = calculate(a1, b, c1);
+
+        if (rim) {
+            if (s <= 0) {
+                throw new Exception("т.к. в римской системе нет отрицательных чисел");
+            }
+            return rim(s);
+        } else {
+            return String.valueOf(s;
         }
     }
 
@@ -62,15 +66,15 @@ public class Main {
         }
     }
 
-    private static String toRoman(int num) {
-        String[] units = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
-        String[] tens = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
-        String[] hundreds = {"", "C"};
+    private static String rim(int num) {
+        String[] q1= {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+        String[] q2 = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+        String[] q3 = {"", "C"};
 
-        return hundreds[num / 100] + tens[(num % 100) / 10] + units[num % 10];
+        return q3[num / 100] + q2[(num % 100) / 10] + q1[num % 10];
     }
 
-    private static boolean isRoman(String str) {
+    private static boolean rim(String str) {
         switch (str) {
             case "I": case "II": case "III": case "IV": case "V":
             case "VI": case "VII": case "VIII": case "IX": case "X":
@@ -90,7 +94,7 @@ public class Main {
                 return a * b;
             case "/":
                 if (b == 0) {
-                    throw new ArithmeticException("деление на ноль");
+                    throw new ArithmeticException("деление на ноль нельзя");
                 }
                 return a / b;
             default:
